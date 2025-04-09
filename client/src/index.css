@@ -6,6 +6,20 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+}
+
+#root, .min-h-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex: 1;
+}
+
 /* font-family: 'Poppins', sans-serif; */
 /* font-family: 'Playfair Display', serif; */
 
