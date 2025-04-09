@@ -20,4 +20,11 @@ function Layout({ children, title, description, keywords, author }) {
   );
 }
 
+Layout.defaultProps = {
+  title: "FarmNest App",
+  description: "Mern Stack",
+  keywords: "mern,react,node,mongodb",
+  author: "ByteBusters",
+};
+
 export default Layout;
