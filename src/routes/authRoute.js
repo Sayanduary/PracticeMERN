@@ -1,11 +1,28 @@
-import { Router } from "express";
-import { registerController, loginController, test, isAdmin } from "../controllers/auth.controller.js";
-import { requireSignIn } from "../middlewares/authMiddleware.js"
+import express from "express";
+import {
+  registerController,
+  loginController,
+  testController,
+} from "../controllers/authController.js";
+import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 
-const authRouter = Router();
+//router object
+const router = express.Router();
 
-authRouter.post('/register', registerController)
-authRouter.post('/login', loginController)
-authRouter.get('/test', requireSignIn,isAdmin, test)
+//routing
+//REGISTER || METHOD POST
+router.post("/register", registerController);
 
-export default authRouter;
+//LOGIN || POST
+router.post("/login", loginController);
+
+//test routes
+router.get("/test", requireSignIn, isAdmin, testController);
+
+//protected route.get
+router.get('/user-auth', requireSignIn, (req,res)=>{
+    res.status(200).send({ok:true});
+})
+
+export default router;
+
