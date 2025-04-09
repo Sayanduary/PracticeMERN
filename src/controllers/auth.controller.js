@@ -166,7 +166,7 @@ export const isAdmin = async (req, res, next) => {
 };
 
 
-export const test = (req, res) => {
+export const testController = (req, res) => {
   res.json({
     success: true,
     message: 'Protected route accessed successfully!',
