@@ -3,7 +3,7 @@ import Layout from "../components/layout/Layout";
 
 function Home() {
   return (
-    <Layout>
+    <Layout title={'Shop Now'}>
       <h1>Homepage</h1>
     </Layout>
   );

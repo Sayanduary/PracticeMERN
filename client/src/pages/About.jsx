@@ -3,12 +3,12 @@ import Layout from "../components/layout/Layout";
 
 const About = () => {
   return (
-    <Layout>
+    <Layout title={"Hello"}>
       <div className="row contactus ">
         <div className="col-md-6 ">
           <img
-            src="/images/about.jpeg"
-            alt="contactus"
+            src="../../public/images/favicon.ico"
+            alt="About Us Picture"
             style={{ width: "100%" }}
           />
         </div>
