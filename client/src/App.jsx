@@ -4,7 +4,6 @@ import AboutPage from "./pages/About";
 import ContactPage from "./pages/Contact";
 import PolicyPage from "./pages/Policy";
 import PageNotFound from "./pages/PageNotFound";
-import register from "./pages/Auth/register";
 import login from "./pages/Auth/login";
 import Dashboard from "./pages/auth/dashboard";
 function App() {
