@@ -6,11 +6,13 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
-#root, .min-h-screen {
+#root,
+.min-h-screen {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -47,18 +49,19 @@ html, body {
   font-family: "roboto", sans-serif;
   letter-spacing: 3px;
 }
+
 /* =============================
 ==========footer============= */
 
 .footer {
   color: white;
   padding: 25px;
-  background: #000000; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #434343,
-    #000000
-  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: #000000;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right,
+      #434343,
+      #000000);
+  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #434343, #000000);
 }
 
@@ -72,6 +75,7 @@ html, body {
   color: #ffefba;
   border-bottom: 1px solid #ffefba;
 }
+
 /* =================================
 ======== page not found css ======= */
 .pnf {
@@ -98,10 +102,12 @@ html, body {
   padding: 10px;
   margin-top: 10px;
 }
+
 .pnf-btn:hover {
   background-color: black;
   color: white;
 }
+
 /* ========================================= */
 /* =========contact us ========= */
 .contactus {
@@ -111,4 +117,14 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Register Page */
+
+.register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  flex-direction: column;
 }
