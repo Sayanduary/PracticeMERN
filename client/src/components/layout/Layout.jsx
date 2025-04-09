@@ -8,10 +8,10 @@ function Layout({ children, title, description, keywords, author }) {
       <Helmet>
         <div>
           <meta charSet="utf-8" />
-          <meta name="description" content="Farmer" />
-          <meta name="keywords" content="HTML, CSS, JavaScript" />
-          <meta name="author" content="John Doe" />
-          <title>My Title</title>
+          <meta name="description" content={description} />
+          <meta name="keywords" content={keywords} />
+          <meta name="author" content={author} />
+          <title>{title}</title>
         </div>
       </Helmet>
       <Header />
