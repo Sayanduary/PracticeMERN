@@ -12,9 +12,12 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<PolicyPage />} />
-        <Route path="/register" element={<PolicyPage />} />
-        <Route path="/login" element={<PolicyPage />} />
+        <Route path = "/dashboard" slement={<privateRoute/>}>
+        <Route path="" element={<PolicyPage />} />
+        </Route>
+        
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/policy" element={<PolicyPage />} />
