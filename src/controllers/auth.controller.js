@@ -1,9 +1,9 @@
 import { userModel } from "../models/user.model.js";
 import { hashPassword, comparePassword } from "../Helpers/authHelper.js";
 import JWT from 'jsonwebtoken'
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+dotenv.config({ path: './.env' });
 
-dotenv.config()
 
 export const registerController = async (req, res) => {
   try {

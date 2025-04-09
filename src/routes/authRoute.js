@@ -12,14 +12,7 @@ const router = express.Router();
 
 //routing
 //REGISTER || METHOD POST
-router.post('/register', async (req, res) => {
-  console.log("Received data:", req.body); // ✅ This will help debug
-
-  // Sample dummy response to test connectivity
-  return res.status(200).json({ success: true, message: "Test register route" });
-});
-
-
+router.post('/register', registerController);
 //LOGIN || POST
 router.post("/login", loginController);
 
@@ -27,8 +20,8 @@ router.post("/login", loginController);
 router.get("/test", requireSignIn, isAdmin, testController);
 
 //protected route.get
-router.get('/user-auth', requireSignIn, (req,res)=>{
-    res.status(200).send({ok:true});
+router.get('/user-auth', requireSignIn, (req, res) => {
+  res.status(200).send({ ok: true });
 })
 
 export default router;

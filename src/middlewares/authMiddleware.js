@@ -3,22 +3,19 @@ import { userModel } from '../models/user.model.js';
 
 export const requireSignIn = async (req, res, next) => {
   try {
-    // Get the token from Authorization header
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
 
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
         message: 'Access denied. No token provided.'
       });
     }
-    // Verify and decode the token
+
+    const token = authHeader.split(' ')[1];
     const decoded = JWT.verify(token, process.env.JWT_SECRET);
 
-    // Fetch the user from the database
-    const user = await userModel.findById(decoded._id).select('-password'); // Exclude password
-
+    const user = await userModel.findById(decoded._id).select('-password');
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -26,7 +23,7 @@ export const requireSignIn = async (req, res, next) => {
       });
     }
 
-    req.user = user; // Attach user to request object
+    req.user = user;
     next();
   } catch (error) {
     const message =

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import Layout from "../../components/layout/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {toast} from 'react-toastify'
+import toast from "react-hot-toast";
+
 import "../../styles/AuthStyle.css";
 const Register = () => {
   const [name, setName] = useState("");
@@ -16,14 +17,17 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/auth/register`, {
-        name,
-        email,
-        password,
-        phone,
-        address,
-      });
-      console.log(import.meta.env.VITE_API_URL)
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/register`,
+        {
+          name,
+          email,
+          password,
+          phone,
+          address,
+        }
+      );
+      console.log(import.meta.env.VITE_API_URL);
       if (res && res.data.success) {
         toast.success(res.data && res.data.message);
         navigate("/login");
