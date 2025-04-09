@@ -4,9 +4,9 @@ import AboutPage from "./pages/About";
 import ContactPage from "./pages/Contact";
 import PolicyPage from "./pages/Policy";
 import PageNotFound from "./pages/PageNotFound";
-import login from "./pages/Auth/login";
+import login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
-import Dashboard from "./pages/auth/dashboard";
+import Dashboard from "./pages/auth/Dashboard";
 function App() {
   return (
     <>
