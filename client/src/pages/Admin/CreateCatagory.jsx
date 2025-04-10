@@ -38,14 +38,14 @@ const CreateCategory = () => {
       toast.error("something went wrong in input");
     }
   };
-
+//get all category
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/v1/category/get-category`
       );
-      if (data.success) {
-        setCategories(data.category);
+      if (data?.success) {
+        setCategories(data?.category);
       }
     } catch (error) {
       console.log(error);
