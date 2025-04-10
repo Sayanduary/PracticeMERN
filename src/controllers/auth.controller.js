@@ -111,7 +111,7 @@ export const loginController = async (req, res) => {
         address: user.address,
         role: user.role
       },
-      token
+      token,
     })
 
   } catch (error) {
