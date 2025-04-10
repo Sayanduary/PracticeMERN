@@ -34,7 +34,7 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Password reset failed");
+      toast.error("Password Reset Failed");
     }
   };
 
@@ -62,7 +62,7 @@ const ForgotPassword = () => {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               className="form-control"
-              placeholder="Enter Your Secret Answer"
+              placeholder="Enter Your Birth Date"
               required
             />
           </div>

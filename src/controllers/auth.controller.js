@@ -7,41 +7,33 @@ dotenv.config({ path: './.env' });
 
 export const registerController = async (req, res) => {
   try {
-
     const { name, email, password, phone, address, answer } = req.body;
-
-    //validation checking 
-    if (!name || !email || !password || !phone || !address ||!answer) {
+    // validation checking
+    if (!name || !email || !password || !phone || !address || !answer) {
       return res.status(400).json({
         success: false,
         message: 'All fields are required'
-      })
+      });
     }
-
     // check user is already registered or not
-
     const existingUser = await userModel.findOne({ email });
-
     if (existingUser) {
       return res.status(400).json({
         success: false,
         message: 'User already exists'
-      })
+      });
     }
-
-    //password length should be 8 characters
+    // password length should be 8 characters
     if (password.length < 8) {
       return res.status(400).json({
         success: false,
         message: 'Password length should be 8 characters'
-      })
+      });
     }
-
-
-    //hash password
+    // hash password
     const hashedPassword = await hashPassword(password);
-
-    //create user
+    
+    // create user - FIXED: don't chain .save() after create()
     const newUser = await userModel.create({
       name,
       email,
@@ -49,14 +41,13 @@ export const registerController = async (req, res) => {
       phone,
       address,
       answer
-    }).save();
-
+    });
+    
     return res.status(200).json({
       success: true,
       message: 'User registered successfully',
       newUser
-    })
-
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -66,7 +57,6 @@ export const registerController = async (req, res) => {
     });
   }
 }
-
 
 export const loginController = async (req, res) => {
 
@@ -137,55 +127,52 @@ export const loginController = async (req, res) => {
 
 //forgotPasswordController
 
-export const forgotPasswordController =async(req,res) =>{
-try {
-  const  {email ,answer , newPassword} =req.nody
-  if(!email){
-    res.status(400).send({
-      message :'email is required'
-    })
+export const forgotPasswordController = async (req, res) => {
+  try {
+    const { email, answer, newpassword } = req.body  // Fixed 'nody' to 'body' and 'newPassword' to 'newpassword'
     
-  }
-  if(!answer){
-    res.status(400).send({
-      message :'answer is required'
-    })
+    if (!email) {
+      return res.status(400).send({  // Added 'return' here
+        message: 'email is required'
+      })
+    }
+    if (!answer) {
+      return res.status(400).send({  // Added 'return' here
+        message: 'answer is required'
+      })
+    }
+    if (!newpassword) {  // Changed to 'newpassword'
+      return res.status(400).send({  // Added 'return' here
+        message: 'New Password is required'
+      })
+    }
     
-  }
-  if(!newPassword){
-    res.status(400).send({
-      message :'New Password is required'
-    })
+    //check
+    const user = await userModel.findOne({ email, answer })
     
-  }
-
-  //check
-
-  const user =await userModel.findOne({email,answer})
-  //validation
-  if(!user){
-    return res.status(404).send({
-      success : false,
-      message : 'wrong email or wrong answer'
+    //validation
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: 'wrong email or wrong answer'
+      })
+    }
+    
+    const hashed = await hashPassword(newpassword)  // Changed to 'newpassword'
+    await userModel.findByIdAndUpdate(user._id, { password: hashed })
+    
+    res.status(200).send({
+      success: true,
+      message: 'password reset succesfully',
+    });
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({
+      success: false,
+      message: 'something went wrong',
+      error
     })
   }
-
-  const hashed = await hashPassword(newPassword)
-  await userModel.findByIdAndUpdate(user._id,{password : hashed})
-  res.status(200).send({
-    success: true,
-   message:'password reset succesfully',
-  });
-   
-
-} catch (error) {
-  console.log(error)
-  res.status(500).send({
-    success:false,
-    message:'something went wrong',
-    error
-  })
-}
 };
 
 // admin access 

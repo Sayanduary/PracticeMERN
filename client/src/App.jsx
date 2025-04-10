@@ -8,8 +8,7 @@ import Register from "./pages/Auth/Register";
 import LoginPage from "./pages/Auth/LoginPage";
 import "react-toastify/dist/ReactToastify.css";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
-import AdminRoute from "./components/routes/AdminRoute";
-import AdminDashboard from "./pages/Admin/AdminDashboard";
+
 function App() {
   return (
     <>
