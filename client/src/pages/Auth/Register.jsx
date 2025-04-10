@@ -92,17 +92,7 @@ const Register = () => {
               required
             />
           </div>
-          <div className="mb-3">
-            <input
-              type="text"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              className="form-control"
-              id="exampleInputEmail1"
-              placeholder="what's your birth date "
-              required
-            />
-          </div>
+         
           <div className="mb-3">
             <input
               type="text"
@@ -111,6 +101,18 @@ const Register = () => {
               className="form-control"
               id="exampleInputEmail1"
               placeholder="Enter Your Address"
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              className="form-control"
+              id="exampleInputEmail1"
+              placeholder="Whats Your Birth Date?"
               required
             />
           </div>
