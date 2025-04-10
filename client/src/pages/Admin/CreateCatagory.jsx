@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from '../../components/layout/Layout';
 import AdminMenu from '../../components/layout/AdminMenu';
-const CreateCatagory = () => {
+const CreateCategory = () => {
   return (
     <Layout title={'Dashboard -Create category'}>
         <div className="container-fluid m-3 p-3">
@@ -18,4 +18,4 @@ const CreateCatagory = () => {
   );
 };
 
-export default CreateCatagory
+export default CreateCategory

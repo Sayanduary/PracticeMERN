@@ -1,21 +1,32 @@
 import { userModel } from "../models/user.model.js";
 import { hashPassword, comparePassword } from "../Helpers/authHelper.js";
-import JWT from 'jsonwebtoken'
+import JWT from 'jsonwebtoken';
 import dotenv from 'dotenv';
-dotenv.config({ path: './.env' });
+import { body, validationResult } from 'express-validator'; // For validation
 
+dotenv.config({ path: './.env' });
 
 export const registerController = async (req, res) => {
   try {
     const { name, email, password, phone, address, answer } = req.body;
-    // validation checking
-    if (!name || !email || !password || !phone || !address || !answer) {
+
+    // Input validation
+    await body('name').notEmpty().withMessage('Name is required').run(req);
+    await body('email').isEmail().withMessage('Valid email is required').run(req);
+    await body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters').run(req);
+    await body('phone').notEmpty().withMessage('Phone number is required').run(req);
+    await body('address').notEmpty().withMessage('Address is required').run(req);
+    await body('answer').notEmpty().withMessage('Answer is required').run(req);
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'All fields are required'
+        message: errors.array()
       });
     }
-    // check user is already registered or not
+
+    // Check if user already exists
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -23,17 +34,9 @@ export const registerController = async (req, res) => {
         message: 'User already exists'
       });
     }
-    // password length should be 8 characters
-    if (password.length < 8) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password length should be 8 characters'
-      });
-    }
-    // hash password
-    const hashedPassword = await hashPassword(password);
 
-    // create user - FIXED: don't chain .save() after create()
+    // Hash password and create user
+    const hashedPassword = await hashPassword(password);
     const newUser = await userModel.create({
       name,
       email,
@@ -48,60 +51,55 @@ export const registerController = async (req, res) => {
       message: 'User registered successfully',
       newUser
     });
+
   } catch (error) {
-    console.log(error);
+    console.error('Registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error in Registration',
-      error: error.message
+      message: 'Registration Error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
-}
+};
+
+const HTTP_STATUS = {
+  OK: 200,
+  BAD_REQUEST: 400,
+  SERVER_ERROR: 500,
+};
 
 export const loginController = async (req, res) => {
-
   try {
-
     const { email, password } = req.body;
 
-    //validation checking 
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'All fields are required'
-      })
+    // Input validation
+    await Promise.all([
+      body('email').isEmail().withMessage('Valid email is required').run(req),
+      body('password').notEmpty().withMessage('Password is required').run(req),
+    ]);
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({ success: false, message: errors.array() });
     }
 
-    //check user is registered or not
+    // Check user
     const user = await userModel.findOne({ email });
-
     if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: 'User not found'
-      })
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({ success: false, message: 'User not found' });
     }
 
-    //compare password
+    // Compare password
     const isPasswordMatched = await comparePassword(password, user.password);
-
     if (!isPasswordMatched) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid credentials'
-      })
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({ success: false, message: 'Invalid credentials' });
     }
 
-    //generate token
-    const token = JWT.sign(
-      { _id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' } // or however long you want
-    );
+    // Generate token including the user role
+    const token = JWT.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-
-    //send response
-    res.status(200).json({
+    // Send response
+    res.status(HTTP_STATUS.OK).json({
       success: true,
       message: 'Login successfully',
       user: {
@@ -109,106 +107,97 @@ export const loginController = async (req, res) => {
         email: user.email,
         phone: user.phone,
         address: user.address,
-        role: user.role
+        role: user.role,
       },
       token,
-    })
+    });
 
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
+    console.error('Login error:', error);
+    res.status(HTTP_STATUS.SERVER_ERROR).json({
       success: false,
-      message: 'Something Went Wrong When Log In',
-      error: error.message
-    })
+      message: 'Something went wrong when logging in',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
   }
 };
 
-
-//forgotPasswordController
-
+// forgotPasswordController
 export const forgotPasswordController = async (req, res) => {
   try {
-    const { email, answer, newpassword } = req.body; // Changed to match frontend field name
+    const { email, answer, newpassword } = req.body;
 
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email is required'
-      });
-    }
-    if (!answer) {
-      return res.status(400).json({
-        success: false,
-        message: 'Answer is required'
-      });
-    }
-    if (!newpassword) {
-      return res.status(400).json({
-        success: false,
-        message: 'New Password is required'
-      });
+    // Input validation
+    await body('email').isEmail().withMessage('Valid email is required').run(req);
+    await body('answer').notEmpty().withMessage('Answer is required').run(req);
+    await body('newpassword').isLength({ min: 8 }).withMessage('New password must be at least 8 characters').run(req);
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, message: errors.array() });
     }
 
-    // Check
+    // Check user
     const user = await userModel.findOne({ email, answer });
-
-    // Validation
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'Wrong Email or Answer'
-      });
+      return res.status(404).json({ success: false, message: 'Invalid Email or Answer' });
     }
 
-    const hashed = await hashPassword(newpassword);
-    await userModel.findByIdAndUpdate(user._id, { password: hashed });
+    // Update password
+    const hashedPassword = await hashPassword(newpassword);
+    await userModel.findByIdAndUpdate(user._id, { password: hashedPassword });
 
     res.status(200).json({
       success: true,
       message: 'Password reset successfully',
     });
   } catch (error) {
-    console.log(error);
+    console.error('Password reset error:', error);
     res.status(500).json({
       success: false,
       message: 'Something went wrong',
-      error: error.message
-    });
-  }
-};
-// admin access 
-
-export const isAdmin = async (req, res, next) => {
-  try {
-    // Ensure user is authenticated
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not authenticated',
-      });
-    }
-
-    // Ensure user has admin privileges
-    if (req.user.role !== 1) {
-      return res.status(403).json({
-        success: false,
-        message: 'Access denied - Admins only',
-      });
-    }
-
-    next();
-  } catch (error) {
-    console.error('isAdmin middleware error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error in admin check',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
 
+// Admin access middleware
+const ROLES = {
+  ADMIN: 1,
+  USER: 0,
+  // Add other roles as necessary
+};
 
+// export const isAdmin = async (req, res, next) => {
+//   try {
+//     if (!req.user) {
+//       return res.status(401).json({
+//         success: false,
+//         message: 'User not authenticated',
+//       });
+//     }
+
+//     // Check if user is an admin
+//     if (req.user.role !== ROLES.ADMIN) {
+//       return res.status(403).json({
+//         success: false,
+//         message: 'Access denied - Admins only',
+//       });
+//     }
+
+//     // Proceed to the next middleware or route handler
+//     next();
+//   } catch (error) {
+//     console.error('isAdmin middleware error:', error);
+//     return res.status(500).json({
+//       success: false,
+//       message: 'Server error in admin check',
+//       error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+//     });
+//   }
+// };
+
+// Test controller
 export const testController = (req, res) => {
   res.json({
     success: true,

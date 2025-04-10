@@ -10,41 +10,43 @@ import ForgotPassword from "./pages/Auth/ForgotPassword";
 import Dashboard from "./pages/user/Dashboard";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import PrivateRoute from "./components/routes/Private";
-import AdminRoute from "./components/routes/Admin"; // ✅ Added import
-
+import AdminRoute from "./components/routes/AdminRoute";
+import Orders from "./pages/user/Orders";
 import "react-toastify/dist/ReactToastify.css";
-import CreateCatagory from "./pages/Admin/CreateCatagory";
+import CreateCategory from "./pages/Admin/CreateCatagory";
 import CreateProduct from "./pages/Admin/CreateProduct";
+import Profile from "./pages/user/Profile";
 import Users from "./pages/Admin/Users";
+import ForgotPasssword from "./pages/Auth/ForgotPassword";
+import Login from "./pages/Auth/LoginPage";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Policy from "./pages/Policy";
+import Pagenotfound from "./pages/PageNotFound";
 
 function App() {
   return (
     <>
-      <Routes>
+       <Routes>
         <Route path="/" element={<HomePage />} />
-
-        {/* Protected user dashboard route */}
         <Route path="/dashboard" element={<PrivateRoute />}>
-          <Route index element={<Dashboard />} />
-          
+          <Route path="user" element={<Dashboard />} />
+          <Route path="user/orders" element={<Orders />} />
+          <Route path="user/profile" element={<Profile />} />
         </Route>
-
-        {/* Protected admin dashboard route */}
         <Route path="/dashboard" element={<AdminRoute />}>
           <Route path="admin" element={<AdminDashboard />} />
-          <Route path="admin/create-category" element={<CreateCatagory />} />
+          <Route path="admin/create-category" element={<CreateCategory />} />
           <Route path="admin/create-product" element={<CreateProduct />} />
           <Route path="admin/users" element={<Users />} />
         </Route>
-
-        {/* Public routes */}
         <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/policy" element={<PolicyPage />} />
-        <Route path="/*" element={<PageNotFound />} />
+        <Route path="/forgot-password" element={<ForgotPasssword />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/policy" element={<Policy />} />
+        <Route path="*" element={<Pagenotfound />} />
       </Routes>
     </>
   );

@@ -3,10 +3,9 @@ import {
   registerController,
   loginController,
   testController,
-  isAdmin,
   forgotPasswordController,
 } from "../controllers/auth.controller.js";
-import { requireSignIn } from "../middlewares/authMiddleware.js";
+import { requireSignIn, isAdmin } from "../middlewares/authMiddleware.js";
 
 
 //router object
@@ -15,7 +14,7 @@ const router = express.Router();
 //routing
 //REGISTER || METHOD POST
 router.post('/register', registerController);
-//LOGIN || POST
+//LOGIN || POST   
 router.post("/login", loginController);
 
 //forgot password
@@ -29,13 +28,13 @@ router.get('/user-auth', requireSignIn, (req, res) => {
   res.status(200).send({ ok: true });
 })
 
-router.get('/admin-auth', requireSignIn,isAdmin, (req, res) => {
+router.get('/admin-auth', requireSignIn, isAdmin, (req, res) => {
   res.status(200).send({ ok: true });
 })
 
-//Protectee Route
 
-router.get('/user-auth', requireSignIn, isAdmin, (req, res) => {
+
+router.get('/user-auth', requireSignIn, (req, res) => {
   res.status(200).send({ ok: true })
 })
 
