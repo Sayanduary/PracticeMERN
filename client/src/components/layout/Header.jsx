@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
-  const navigate = useNavigate(); // ✅
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     setAuth({
@@ -15,7 +15,7 @@ const Header = () => {
     });
     localStorage.removeItem("auth");
     toast.success("Logout Successfully");
-    navigate("/login"); // ✅ Navigate after logout
+    navigate("/login");
   };
 
   return (
@@ -39,15 +39,17 @@ const Header = () => {
             </Link>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <NavLink to="/" className="nav-link ">
+                <NavLink to="/" className="nav-link">
                   Home
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/category" className="nav-link ">
+                <NavLink to="/category" className="nav-link">
                   Category
                 </NavLink>
               </li>
+
+              {/* When user is not logged in */}
               {!auth.user ? (
                 <>
                   <li className="nav-item">
@@ -63,14 +65,28 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <li className="nav-item">
+                  {/* Dropdown for logged-in user */}
+                  <li className="nav-item dropdown">
                     <button
-                      onClick={handleLogout}
-                      className="nav-link btn btn-link"
-                      style={{ textDecoration: "none", color: "inherit" }}
+                      className="btn nav-link dropdown-toggle"
+                      id="navbarDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
                     >
-                      Logout
+                      {auth?.user?.name || "Dashboard"}
                     </button>
+                    <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li>
+                        <NavLink to="/dashboard" className="dropdown-item">
+                          Dashboard
+                        </NavLink>
+                      </li>
+                      <li>
+                        <button onClick={handleLogout} className="dropdown-item">
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
                   </li>
                 </>
               )}
@@ -87,4 +103,5 @@ const Header = () => {
     </>
   );
 };
+
 export default Header;

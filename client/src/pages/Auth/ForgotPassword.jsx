@@ -1,52 +1,49 @@
 import React, { useState } from "react";
 import Layout from "../../components/layout/Layout";
 import axios from "axios";
-import { useNavigate ,useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuth } from "../../context/auth";
+
 import "../../styles/AuthStyle.css";
 
-const Login = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // eslint-disable-next-line no-unused-vars
-  const [auth, setAuth] = useAuth();
+  const [newpassword, setnewPassword] = useState("");
+  const [answer, setAnswer] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/auth/login`,
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/forgot-password`,
         {
           email,
-          password,
+          newpassword,
+          answer
         },
-        { withCredentials: true } // if using cookies for auth
+        { withCredentials: true }
       );
 
       if (res && res.data.success) {
         toast.success(res.data.message);
-        setAuth({
-          user: res.data.user,
-          token: res.data.token,
-        });
-        localStorage.setItem("auth", JSON.stringify(res.data));
-        navigate("/");
+        navigate("/login");
       } else {
         toast.error(res.data.message);
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Login failed");
+      console.error(error);
+      toast.error("Password reset failed");
     }
   };
 
   return (
-    <Layout title="Login - Ecommer App">
-      <div className="form-container ">
+    <Layout title={"Forgot Password - Ecommerce App"}>
+      <div className="form-container">
         <form onSubmit={handleSubmit}>
-          <h4 className="title">LOGIN</h4>
+          <h4 className="title">Reset Password</h4>
+
           <div className="mb-3">
             <input
               type="email"
@@ -58,29 +55,36 @@ const Login = () => {
               autoFocus
             />
           </div>
+
           <div className="mb-3">
             <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="text"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
               className="form-control"
-              placeholder="Enter Your Password"
+              placeholder="Enter Your Secret Answer"
               required
             />
           </div>
+
           <div className="mb-3">
-          <button type="button " className="btn btn-primary" onClick={()=>{navigate('/forgot-password')}}>
-            Forgot Password
-          </button>
+            <input
+              type="password"
+              value={newpassword}
+              onChange={(e) => setnewPassword(e.target.value)}
+              className="form-control"
+              placeholder="Enter New Password"
+              required
+            />
           </div>
+
           <button type="submit" className="btn btn-primary">
-            LOGIN
+            RESET
           </button>
-          
         </form>
       </div>
     </Layout>
   );
 };
 
-export default Login;
+export default ForgotPassword;
