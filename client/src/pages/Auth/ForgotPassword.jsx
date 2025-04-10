@@ -21,7 +21,7 @@ const ForgotPassword = () => {
         {
           email,
           newpassword,
-          answer
+          answer,
         },
         { withCredentials: true }
       );

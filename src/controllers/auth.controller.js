@@ -32,7 +32,7 @@ export const registerController = async (req, res) => {
     }
     // hash password
     const hashedPassword = await hashPassword(password);
-    
+
     // create user - FIXED: don't chain .save() after create()
     const newUser = await userModel.create({
       name,
@@ -42,7 +42,7 @@ export const registerController = async (req, res) => {
       address,
       answer
     });
-    
+
     return res.status(200).json({
       success: true,
       message: 'User registered successfully',
@@ -129,52 +129,54 @@ export const loginController = async (req, res) => {
 
 export const forgotPasswordController = async (req, res) => {
   try {
-    const { email, answer, newpassword } = req.body  // Fixed 'nody' to 'body' and 'newPassword' to 'newpassword'
-    
+    const { email, answer, newpassword } = req.body; // Changed to match frontend field name
+
     if (!email) {
-      return res.status(400).send({  // Added 'return' here
-        message: 'email is required'
-      })
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
     }
     if (!answer) {
-      return res.status(400).send({  // Added 'return' here
-        message: 'answer is required'
-      })
-    }
-    if (!newpassword) {  // Changed to 'newpassword'
-      return res.status(400).send({  // Added 'return' here
-        message: 'New Password is required'
-      })
-    }
-    
-    //check
-    const user = await userModel.findOne({ email, answer })
-    
-    //validation
-    if (!user) {
-      return res.status(404).send({
+      return res.status(400).json({
         success: false,
-        message: 'wrong email or wrong answer'
-      })
+        message: 'Answer is required'
+      });
     }
-    
-    const hashed = await hashPassword(newpassword)  // Changed to 'newpassword'
-    await userModel.findByIdAndUpdate(user._id, { password: hashed })
-    
-    res.status(200).send({
+    if (!newpassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'New Password is required'
+      });
+    }
+
+    // Check
+    const user = await userModel.findOne({ email, answer });
+
+    // Validation
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Wrong Email or Answer'
+      });
+    }
+
+    const hashed = await hashPassword(newpassword);
+    await userModel.findByIdAndUpdate(user._id, { password: hashed });
+
+    res.status(200).json({
       success: true,
-      message: 'password reset succesfully',
+      message: 'Password reset successfully',
     });
   } catch (error) {
-    console.log(error)
-    res.status(500).send({
+    console.log(error);
+    res.status(500).json({
       success: false,
-      message: 'something went wrong',
-      error
-    })
+      message: 'Something went wrong',
+      error: error.message
+    });
   }
 };
-
 // admin access 
 
 export const isAdmin = async (req, res, next) => {

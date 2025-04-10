@@ -35,7 +35,7 @@ router.get('/admin-auth', requireSignIn, (req, res) => {
 
 //Protectee Route
 
-router.get('/user-auth', requireSignIn,isAdmin,(req, res) => {
+router.get('/user-auth', requireSignIn, isAdmin, (req, res) => {
   res.status(200).send({ ok: true })
 })
 
