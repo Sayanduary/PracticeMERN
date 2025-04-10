@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import { connectDB } from './DB/db.config.js'
 import { app } from './app.js'
+import 'antd/dist/reset.css';
 
 dotenv.config({
   path: "./.env"
