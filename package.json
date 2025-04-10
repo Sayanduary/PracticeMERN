@@ -12,6 +12,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "antd": "^5.24.6",
     "bcryptjs": "^3.0.2",
     "colors": "^1.4.0",
     "concurrently": "^9.1.2",

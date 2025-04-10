@@ -16,17 +16,19 @@ axios.defaults.headers.common['Authorization']=auth?.token
 
 
 
-
-  useEffect(() => {
-    const data = localStorage.getItem("auth");
-    if (data) {
-      const parsed = JSON.parse(data);
-      setAuth({
-        user: parsed.user,
-        token: parsed.token,
-      });
-    }
-  }, []); // ✅ Dependency array ensures it runs only once
+useEffect(() => {
+  const data = localStorage.getItem("auth");
+  if (data) {
+    const parsed = JSON.parse(data);
+    setAuth({
+      user: parsed.user,
+      token: parsed.token,
+    });
+    // ✅ set axios token only after reading from localStorage
+    axios.defaults.headers.common["Authorization"] = `Bearer ${parsed.token}`;
+  }
+}, []);
+ // ✅ Dependency array ensures it runs only once
 
   return (
     <AuthContext.Provider value={[auth, setAuth]}>
