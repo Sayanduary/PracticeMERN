@@ -8,7 +8,8 @@ import Register from "./pages/Auth/Register";
 import LoginPage from "./pages/Auth/LoginPage";
 import "react-toastify/dist/ReactToastify.css";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
-
+import AdminRoute from "./components/routes/AdminRoute";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 function App() {
   return (
     <>
@@ -17,6 +18,9 @@ function App() {
 
         <Route path="/dashboard" element={<PrivateRoute />}>
           <Route path="" element={<Dashboard />} />
+        </Route>
+        <Route path="/dashboard" element={<AdminRoute/>}>
+          <Route path="admin" element={<AdminDashboard/>} />
         </Route>
 
         <Route path="/register" element={<Register />} />
