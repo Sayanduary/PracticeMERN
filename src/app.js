@@ -3,8 +3,14 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors';
 import authRouter from './routes/authRoute.js';
 import categoryRoutes from '/routes/categoryRoutes.js';
+import colors from "colors";
+import dotenv from "dotenv";
+import morgan from "morgan";
+import connectDB from "./config/db.js";
+
 
 const app = express();
+connectDB();
 
 app.use(cors({
   origin: "http://localhost:5173",  // your frontend origin
