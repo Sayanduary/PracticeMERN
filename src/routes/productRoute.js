@@ -14,10 +14,9 @@ router.get('/get-product/:slug', getSingleProductController)
 
 
 router.get('/product-photo/:pid', productPhotoController)
+router.delete('/delete-product/:pid', requireSignIn, isAdmin, deleteProductController);
 
-router.delete('/delete-product', requireSignIn, isAdmin, deleteProductController)
 
-
-router.put('/update-product', requireSignIn, isAdmin, updateProductController)
+router.put('/update-product/:pid', requireSignIn, isAdmin, formidable(), updateProductController);
 
 export default router;
