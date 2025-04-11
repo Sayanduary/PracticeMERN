@@ -2,11 +2,14 @@ import React from "react";
 import Layout from "../components/layout/Layout";
 import { useCart } from "../context/Cart";
 import { useAuth } from "../context/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
 const CartPage = () => {
   const [auth] = useAuth();
   const [cart, setCart] = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
+
   // total price
   const totalPrice = () => {
     try {
@@ -22,6 +25,7 @@ const CartPage = () => {
       console.log(error);
     }
   };
+
   // delete item
   const removeCartItem = (pid) => {
     try {
@@ -32,6 +36,7 @@ const CartPage = () => {
       console.log(error);
     }
   };
+
   return (
     <Layout>
       <div className="container my-4">
@@ -80,11 +85,13 @@ const CartPage = () => {
             <p>Total | Checkout | Payment</p>
             <hr />
             <h5>Total: {totalPrice()}</h5>
-            {auth?.user?.address ? (
+            {auth?.user?.address?.street ? (
               <>
                 <div className="mb-3">
                   <h5>Shipping to:</h5>
-                  <p>{auth?.user?.address}</p>
+                  <p>Street: {auth?.user?.address?.street}</p>
+                  {auth?.user?.address?.city && <p>City: {auth?.user?.address?.city}</p>}
+                  {auth?.user?.address?.postalCode && <p>Postal Code: {auth?.user?.address?.postalCode}</p>}
                   <button
                     className="btn btn-outline-warning btn-sm"
                     onClick={() => navigate("/dashboard/user/profile")}
@@ -107,7 +114,7 @@ const CartPage = () => {
                     className="btn btn-outline-primary btn-sm"
                     onClick={() =>
                       navigate("/login", {
-                        state: "/cart",
+                        state: location.pathname,
                       })
                     }
                   >
@@ -122,4 +129,5 @@ const CartPage = () => {
     </Layout>
   );
 };
+
 export default CartPage;

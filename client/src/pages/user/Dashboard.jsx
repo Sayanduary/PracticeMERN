@@ -6,7 +6,6 @@ import { useAuth } from "../../context/auth";
 const Dashboard = () => {
   const [auth] = useAuth();
 
-
   return (
     <Layout title={"Dashboard - FarmNest"}>
       <div className="container-fluid p-3 m-3">
@@ -18,7 +17,10 @@ const Dashboard = () => {
             <div className="card w-75 p-3">
               <h3>Name: {auth?.user?.name}</h3>
               <p>Email: {auth?.user?.email}</p>
-              <p>Address: {auth?.user?.address}</p>
+              <p>Address:</p>
+              <p>Street: {auth?.user?.address?.street}</p>
+              <p>City: {auth?.user?.address?.city}</p>
+              <p>Postal Code: {auth?.user?.address?.postalCode}</p>
             </div>
           </div>
         </div>

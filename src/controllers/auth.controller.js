@@ -205,39 +205,40 @@ export const testController = (req, res) => {
     user: req.user, // Optional: shows the authenticated user's info
   });
 };
-
-
 export const updateProfileController = async (req, res) => {
   try {
+    console.log('req.body:', req.body);
     const { name, email, password, phone, address } = req.body;
     const user = await userModel.findById(req.user._id);
-    
-    if(password && password.length <6){
-      return res.status(400).json({
-        success: false,
-        message: 'Password is required and must be at least 6 characters',
-      });
+
+    let hashedPassword = user.password;
+    if (password && password.length >= 6) {
+      hashedPassword = await hashPassword(password);
     }
-    const hashedPassword = password ? (await hashPassword(password)) : user.password;
-    const updatedUser = await userModel.findByIdAndUpdate(req.user._id, {
-      name:name ||user.name,
-      email:email || user.email,
-      password:hashedPassword || user.password,
-      phone:phone || user.phone,
-      address:address ||user.address,
-    }, 
-    { new: true });
-    res.status(200).send({
-      success: true,
-      message: 'Profile updated successfully',
-      updatedUser,
-    });
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      req.user._id,
+      {
+        name: name || user.name,
+        email: email || user.email,
+        password: hashedPassword,
+        phone: phone || user.phone,
+        address: address || user.address,
+      },
+      { new: true }
+    ).select('-password');
+
+    console.log('updatedUser:', updatedUser);
+    res.status(200).send({ success: true, message: 'Profile updated successfully', updatedUser });
+
   } catch (error) {
     console.error('Update profile error:', error);
+    console.error('Error message:', error.message); // Log the specific error message
+    console.error('Error stack:', error.stack);     // Log the stack trace for more context
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
-      error
+      message: 'Something went wrong while updating profile',
+      error: error.message, // Send the error message back (for debugging - remove in production)
     });
   }
 };

@@ -19,11 +19,16 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   address: {
-    type: {Object},
+    type: new mongoose.Schema({ // Define a nested schema
+      street: { type: String },
+      city: { type: String },
+      postalCode: { type: String },
+      // ... other address fields
+    }, { _id: false }), // _id: false prevents Mongoose from creating a separate _id for the subdocument
     required: true,
   },
 
-  answer :   {
+  answer: {
     type: String,
     required: true,
   },

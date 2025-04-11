@@ -20,19 +20,6 @@ const UserMenu = () => {
           >
             orders
           </NavLink>
-          <NavLink
-            to="/dashboard/admin/create-product "
-            className="list-group-item list-group-item-action"
-          >
-            Create Product
-          </NavLink>
-
-          <NavLink
-            className="list-group-item list-group-item-action disabled"
-            aria-disabled="true"
-          >
-            A disabled link item
-          </NavLink>
         </div>
       </div>
     </div>
