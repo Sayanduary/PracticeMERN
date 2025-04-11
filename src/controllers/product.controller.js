@@ -123,10 +123,10 @@ export const updateProductController = async (req, res) => {
   try {
     // Add this debug line
     console.log("Update request received:", { body: req.fields, files: req.files, params: req.params });
-    
+
     const { name, description, price, category, quantity, shipping } = req.fields;
     const { photo } = req.files || {};
-    
+
     // Validation
     switch (true) {
       case !name:
@@ -154,7 +154,7 @@ export const updateProductController = async (req, res) => {
 
       if (!product) {
         return res.status(404).send({
-          success: false, 
+          success: false,
           error: "Product not found"
         });
       }
@@ -187,3 +187,71 @@ export const updateProductController = async (req, res) => {
     });
   }
 };
+
+// Filter products by category
+export const productFilterController = async (req, res) => {
+
+
+  try {
+    const { checked, radio } = req.body;
+
+    let args = {};
+    if (checked.length > 0) args.category = checked
+    if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] }
+    const products = await productModel.find(args)
+    res.status(200).send({
+      success: true,
+      products,
+    })
+
+
+  } catch (error) {
+    console.error("Product filter error:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error while filtering products",
+      error,
+    });
+  }
+};
+
+export const productCountController = async (req, res) => {
+  try {
+
+    const total = await productModel.find({}).estimatedDocumentCount()
+    res.status(200).send({
+      success: true,
+      total,
+    })
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      message: 'Error in Product Count',
+      error,
+      success: false,
+    })
+  }
+}
+
+
+export const productListController = async (req, res) => {
+  try {
+
+    const perPage = 6
+    const page = req.params.page ? req.params.page : 1
+    const products = await productModel.find({}).select("-photo").skip((page - 1) * perPage).limit(perPage).sort({ createdAt: -1 })
+
+    res.status(200).send({
+      success: true,
+      products,
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      success: false,
+      message: 'Error in Per Page CTRL'
+    })
+  }
+}

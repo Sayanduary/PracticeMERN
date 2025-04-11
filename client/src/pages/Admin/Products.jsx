@@ -76,19 +76,10 @@ const Products = () => {
                             </p>
                           </div>
                         </Link>
-                        <div className="card-footer">
-                          <div className="d-flex justify-content-between">
-                            <Link
-                              to={`/dashboard/admin/product/${p._id}`}
-                              className="btn btn-primary btn-sm"
-                            >
-                              Edit
-                            </Link>
-                           
-                          </div>
+                        
                         </div>
                       </div>
-                    </div>
+                    
                   ))
                 ) : (
                   <div className="text-center">

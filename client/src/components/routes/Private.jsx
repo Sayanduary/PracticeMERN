@@ -15,6 +15,7 @@ const PrivateRoute = () => {
           `${import.meta.env.VITE_API_URL}/api/v1/auth/user-auth`,
           {
             headers: {
+              // eslint-disable-next-line no-constant-binary-expression
               Authorization: `Bearer ${auth?.token}` || "",
             },
           }
