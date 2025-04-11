@@ -32,7 +32,8 @@ router.get('/search/:keyword', searchProductController)
 
 router.get('/related-product/:pid/:cid', relatedProductController)
 
-router.get('/product-category/:slug/:cid', productCategoryController)
+router.get('/product-category/:slug', productCategoryController);
+
 
 
 export default router;

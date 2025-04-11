@@ -35,10 +35,13 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/product/:slug" element={<ProductDetails/>} />
-        <Route path="/categories/:slug" element={<Categories/>} />
-        <Route path="/category/:slug" element={<CategoryProduct/>} />
-        <Route path="/search" element={<Search/>}></Route>
+        <Route path="/product/:slug" element={<ProductDetails />} />
+
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/search" element={<Search />}></Route>
+
+        <Route path="/category/:slug" element={<CategoryProduct />} />
+
         <Route path="/dashboard" element={<PrivateRoute />}>
           <Route path="user" element={<Dashboard />} />
           <Route path="user/orders" element={<Orders />} />

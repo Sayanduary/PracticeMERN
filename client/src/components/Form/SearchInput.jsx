@@ -1,36 +1,59 @@
-import React from 'react'
-import { useSearch } from '../../context/Search';
-import axios from axios;
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useSearch } from "../../context/Search";
+import { useNavigate } from "react-router-dom";
+
 const SearchInput = () => {
-const [values,setValues] = useSearch();
+  const [values, setValues, fetchResults, loading, contextError] = useSearch();
+  const [localError, setLocalError] = useState("");
+  const navigate = useNavigate();
 
-const navigate =useNavigate()
-
-const handleSubmit =async(e)=>{
-    e.preventDefault()
-    try {
-        const {data} =await axios.get(`/api/v1/product/search/${values.keyword}`)
-        setValues({...values,results :data});
-        navigate("/search");
-    } catch (error) {
-        console.log(error)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLocalError("");
+    
+    if (!values.keyword || values.keyword.trim() === "") {
+      setLocalError("Please enter something to search");
+      return;
     }
-}
+    
+    try {
+      await fetchResults(values.keyword);
+      navigate("/search");
+    } catch (error) {
+      console.error("Search submission error:", error);
+      setLocalError("An error occurred while searching");
+    }
+  };
 
   return (
     <div>
-  <div>
-    <form className="d-flex" role="search" onSubmit={handleSubmit}>
-      <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"  
-      value={values.keyword}
-      onChange={(e) => setValues({...values,keyword:e.target.value})}/>
-      <button className="btn btn-outline-success" type="submit">Search</button>
-    </form>
-  </div>
-  
-</div>
+      <form className="d-flex" role="search" onSubmit={handleSubmit}>
+        <input
+          className="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          value={values.keyword}
+          onChange={(e) =>
+            setValues((prev) => ({
+              ...prev,
+              keyword: e.target.value,
+            }))
+          }
+        />
+        <button
+          className="btn btn-outline-success"
+          type="submit"
+          disabled={!values.keyword || values.keyword.trim() === "" || loading}
+        >
+          {loading ? "Searching..." : "Search"}
+        </button>
+      </form>
+      {(localError || contextError) && (
+        <div className="text-danger mt-2">{localError || contextError}</div>
+      )}
+    </div>
   );
 };
 
-export default SearchInput
+export default SearchInput;

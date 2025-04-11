@@ -257,59 +257,69 @@ export const productListController = async (req, res) => {
   }
 };
 
-//search product
 export const searchProductController = async (req, res) => {
   try {
     const { keyword } = req.params;
+    console.log("Search request received with keyword:", keyword);
+    
+    if (!keyword || keyword.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Search keyword is required"
+      });
+    }
+
+    // Use a more lenient search pattern
+    const searchPattern = keyword.trim();
+    console.log("Searching with pattern:", searchPattern);
+    
     const result = await productModel.find({
-    $or : [
-      {name: { $regex: keyword, $options: "i" }},
-      {description: { $regex: keyword, $options: "i" }}
-    ]
-  })
-    res.status(200).send({
+      $or: [
+        { name: { $regex: searchPattern, $options: "i" } },
+        { description: { $regex: searchPattern, $options: "i" } }
+      ]
+    }).select("-photo");
+
+    console.log(`Found ${result.length} products matching "${keyword}"`);
+    
+    return res.status(200).json({
       success: true,
       products: result
-    }).select("-photo");
-      res.json(result)
-
-  
+    });
   } catch (error) {
-    console.log(error);
-    res.status(400).send({
+    console.error("Search error:", error);
+    return res.status(500).json({
       success: false,
-      message: "Error in search product",
-      error
+      message: "Error searching products",
+      error: error.message
     });
   }
 };
 
 
-
 export const relatedProductController = async (req, res) => {
   try {
-    const {pid,cid} = req.params;
-    const products = await productModel.find({
-      category :cid,
-      _id:{$ne:pid}
-    }).select("-photo").limit(10).populate("category")
-    res.status(200).send({
-      success:true,
-      products,
-    })
+    const { pid, cid } = req.params;
+
+    const products = await productModel
+      .find({
+        category: cid,
+        _id: { $ne: pid }, // exclude current product
+      })
+      .select("-photo")
+      .limit(10)
+      .populate("category");
+
     res.status(200).send({
       success: true,
-      products: result
-    }).select("-photo");
-      res.json(result)
-
-  
+      products,
+    });
   } catch (error) {
     console.log(error);
     res.status(400).send({
       success: false,
-      message: "Error in getting related product",
-      error
+      message: "Error in getting related products",
+      error,
     });
   }
 };
