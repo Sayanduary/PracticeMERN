@@ -15,19 +15,20 @@ const PrivateRoute = () => {
           `${import.meta.env.VITE_API_URL}/api/v1/auth/user-auth`,
           {
             headers: {
-              Authorization: auth?.token || "",
+              Authorization: `Bearer ${auth?.token}` || "",
             },
           }
         );
         setOk(res.data.ok);
       } catch (err) {
-        setOk(false,err);
+        setOk(false);
+        console.error("Auth Check Failed:", err.response?.data || err.message);
       }
     };
-
+  
     if (auth?.token) authCheck();
   }, [auth?.token]);
-
+  
   return ok ? <Outlet /> : <Spinner />;
 };
 
