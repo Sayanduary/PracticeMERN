@@ -4,10 +4,15 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/auth.jsx";
+import { SearchProvider } from "./context/Search.jsx";
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
+  
     <AuthProvider>
+      <SearchProvider>
+      <BrowserRouter>
       <App />
-    </AuthProvider>
-  </BrowserRouter>
+      </BrowserRouter>
+   
+  </SearchProvider>
+  </AuthProvider>
 );

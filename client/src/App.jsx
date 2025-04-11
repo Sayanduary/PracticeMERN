@@ -25,12 +25,16 @@ import Policy from "./pages/Policy";
 import Pagenotfound from "./pages/PageNotFound";
 import Products from "./pages/Admin/Products";
 import UpdateProduct from "./pages/Admin/UpdateProduct.jsx";
+import Search from "./pages/Search.jsx";
+import ProductDetails from "./pages/ProductDetails.jsx";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/product/:slug" element={<ProductDetails/>} />
+        <Route path="/search" element={<Search/>}></Route>
         <Route path="/dashboard" element={<PrivateRoute />}>
           <Route path="user" element={<Dashboard />} />
           <Route path="user/orders" element={<Orders />} />

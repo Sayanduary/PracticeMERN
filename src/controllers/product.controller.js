@@ -254,4 +254,61 @@ export const productListController = async (req, res) => {
       message: 'Error in Per Page CTRL'
     })
   }
-}
+};
+
+//search product
+export const searchProductController = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const result = await productModel.find({
+    $or : [
+      {name: { $regex: keyword, $options: "i" }},
+      {description: { $regex: keyword, $options: "i" }}
+    ]
+  })
+    res.status(200).send({
+      success: true,
+      products: result
+    }).select("-photo");
+      res.json(result)
+
+  
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "Error in search product",
+      error
+    });
+  }
+};
+
+
+
+export const relatedProductController = async (req, res) => {
+  try {
+    const {pid,cid} = req.params;
+    const products = await productModel.find({
+      category :cid,
+      _id:{$ne:pid}
+    }).select("-photo").limit(10).populate("category")
+    res.status(200).send({
+      success:true,
+      products,
+    })
+    res.status(200).send({
+      success: true,
+      products: result
+    }).select("-photo");
+      res.json(result)
+
+  
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "Error in getting related product",
+      error
+    });
+  }
+};
