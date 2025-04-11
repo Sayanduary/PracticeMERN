@@ -29,19 +29,17 @@ import Search from "./pages/Search.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
 import Categories from "./pages/Categories.jsx";
 import CategoryProduct from "./pages/CategoryProduct.jsx";
-
+import CartPage from './pages/CartPage.jsx'
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:slug" element={<ProductDetails />} />
-
         <Route path="/categories" element={<Categories />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route path="/search" element={<Search />}></Route>
-
         <Route path="/category/:slug" element={<CategoryProduct />} />
-
         <Route path="/dashboard" element={<PrivateRoute />}>
           <Route path="user" element={<Dashboard />} />
           <Route path="user/orders" element={<Orders />} />
@@ -55,7 +53,6 @@ function App() {
           <Route path="admin/products" element={<Products />} />
           <Route path="admin/users" element={<Users />} />
         </Route>
-
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPasssword />} />
         <Route path="/login" element={<Login />} />
@@ -67,5 +64,4 @@ function App() {
     </>
   );
 }
-
 export default App;

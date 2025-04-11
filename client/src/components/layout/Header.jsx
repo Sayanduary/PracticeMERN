@@ -4,9 +4,11 @@ import { useAuth } from "../../context/auth";
 import toast from "react-hot-toast";
 import SearchInput from "../Form/SearchInput";
 import useCategory from "../../hooks/useCategory";
-
+import { useCart } from "../../context/Cart";
+import { Badge } from "antd";
 const Header = () => {
   const [auth, setAuth] = useAuth();
+  const [cart] = useCart();
   const categories = useCategory();
   const navigate = useNavigate();
 
@@ -65,7 +67,10 @@ const Header = () => {
                   </li>
                   {categories?.map((c) => (
                     <li key={c._id}>
-                      <Link className="dropdown-item" to={`/category/${c.slug}`}>
+                      <Link
+                        className="dropdown-item"
+                        to={`/category/${c.slug}`}
+                      >
                         {c.name}
                       </Link>
                     </li>
@@ -97,10 +102,15 @@ const Header = () => {
                   >
                     {auth?.user?.name || "Dashboard"}
                   </button>
-                  <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="navbarDropdown"
+                  >
                     <li>
                       <NavLink
-                        to={`/dashboard/${auth?.user?.role === 1 ? "admin" : "user"}`}
+                        to={`/dashboard/${
+                          auth?.user?.role === 1 ? "admin" : "user"
+                        }`}
                         className="dropdown-item"
                       >
                         Dashboard
@@ -117,9 +127,11 @@ const Header = () => {
 
               {/* Cart */}
               <li className="nav-item">
-                <NavLink to="/cart" className="nav-link">
-                  Cart (0)
-                </NavLink>
+                <Badge count={cart?.length} showZero>
+                  <NavLink to="/cart" className="nav-link">
+              CART
+                  </NavLink>
+                </Badge>
               </li>
             </ul>
           </div>
