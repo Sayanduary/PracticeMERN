@@ -1,12 +1,12 @@
 import express from 'express'
 import { isAdmin, requireSignIn } from '../middlewares/authMiddleware.js';
-import { createProdcutController, deleteProductController, getProductController, getSingleProductController, productPhotoController, updateProductController } from '../controllers/product.controller.js';
-import ExpressFormidable from "express-formidable"
+import { createProductController, deleteProductController, getProductController, getSingleProductController, productPhotoController, updateProductController } from '../controllers/product.controller.js';
+import formidable from "express-formidable"
 
 const router = express.Router();
 
 
-router.post('/create-product', requireSignIn, isAdmin, ExpressFormidable(), createProdcutController)
+router.post('/create-product', requireSignIn, isAdmin, formidable(), createProductController)
 
 router.get('/get-product', getProductController)
 
