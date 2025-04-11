@@ -3,6 +3,7 @@ import { hashPassword, comparePassword } from "../Helpers/authHelper.js";
 import JWT from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { body, validationResult } from 'express-validator'; // For validation
+import orderModel from "../models/orderModel.js";
 
 dotenv.config({ path: './.env' });
 
@@ -205,40 +206,84 @@ export const testController = (req, res) => {
     user: req.user, // Optional: shows the authenticated user's info
   });
 };
+
+
+
+
+
 export const updateProfileController = async (req, res) => {
   try {
-    console.log('req.body:', req.body);
     const { name, email, password, phone, address } = req.body;
     const user = await userModel.findById(req.user._id);
-
-    let hashedPassword = user.password;
-    if (password && password.length >= 6) {
-      hashedPassword = await hashPassword(password);
+    
+    if(password && password.length <6){
+      return res.status(400).json({
+        success: false,
+        message: 'Password is required and must be at least 6 characters',
+      });
     }
-
-    const updatedUser = await userModel.findByIdAndUpdate(
-      req.user._id,
-      {
-        name: name || user.name,
-        email: email || user.email,
-        password: hashedPassword,
-        phone: phone || user.phone,
-        address: address || user.address,
-      },
-      { new: true }
-    ).select('-password');
-
-    console.log('updatedUser:', updatedUser);
-    res.status(200).send({ success: true, message: 'Profile updated successfully', updatedUser });
-
+    const hashedPassword = password ? (await hashPassword(password)) : user.password;
+    const updatedUser = await userModel.findByIdAndUpdate(req.user._id, {
+      name:name ||user.name,
+      email:email || user.email,
+      password:hashPassword || user.password,
+      phone:phone || user.phone,
+      address:address ||user.address,
+    }, 
+    { new: true });
+    res.status(200).send({
+      success: true,
+      message: 'Profile updated successfully',
+      updatedUser,
+    });
   } catch (error) {
     console.error('Update profile error:', error);
-    console.error('Error message:', error.message); // Log the specific error message
-    console.error('Error stack:', error.stack);     // Log the stack trace for more context
     res.status(500).json({
       success: false,
-      message: 'Something went wrong while updating profile',
-      error: error.message, // Send the error message back (for debugging - remove in production)
+      message: 'Something went wrong',
+      error
     });
   }
 };
+
+
+
+export const getOrdersController = async (req, res) => {
+  try {
+    const orders = await orders.find({buyer:req.user._id }).populate("products","-photo").populate("buyer","name")
+    res.status(200).json({
+      success: true,
+      message: "Orders fetched successfully",
+      orders,
+    });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).send({
+      success: false,
+      message: "Failed to fetch orders",
+      error
+    });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
