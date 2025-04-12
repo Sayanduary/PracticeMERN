@@ -4,7 +4,7 @@ import cors from 'cors';
 import authRouter from './routes/authRoute.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/productRoute.js'
-
+import cropRoutes from './routes/cropRoutes.js'
 
 const app = express();
 
@@ -23,6 +23,6 @@ app.use(cookieParser());
 app.use('/api/v1/auth', authRouter);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
-
+app.use('v1/api/crops', cropRoutes)
 
 export { app };
