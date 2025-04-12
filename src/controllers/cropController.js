@@ -1,5 +1,5 @@
 import { recommendCrop } from '../ai/cropRecommender.js';
-import CropLog from '../models/CropLog.js';
+import CropLog from '../models/cropLog.model.js'
 
 export const getCropRecommendation = async (req, res) => {
   try {
