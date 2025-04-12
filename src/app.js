@@ -23,6 +23,6 @@ app.use(cookieParser());
 app.use('/api/v1/auth', authRouter);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
-app.use('/api/v1/api/crops', cropRoutes)
+app.use('/api/v1/crops', cropRoutes)
 
 export { app };
