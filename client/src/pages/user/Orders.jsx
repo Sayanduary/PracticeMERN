@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Layout from '../../components/layout/Layout';
-import UserMenu from '../../components/layout/UserMenu';
-import axios from 'axios';
-import { useAuth } from '../../context/auth';
-import moment from 'moment';
+import React, { useState, useEffect } from "react";
+import Layout from "../../components/layout/Layout";
+import UserMenu from "../../components/layout/UserMenu";
+import axios from "axios";
+import { useAuth } from "../../context/auth";
+import moment from "moment";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -11,7 +11,7 @@ const Orders = () => {
 
   const getOrders = async () => {
     try {
-      const { data } = await axios.get('/api/v1/auth/orders');
+      const { data } = await axios.get("/api/v1/auth/orders");
       setOrders(data);
     } catch (error) {
       console.log(error);
@@ -50,7 +50,7 @@ const Orders = () => {
                       <td>{o?.status}</td>
                       <td>{o?.buyer?.name}</td>
                       <td>{moment(o?.createdAt).fromNow()}</td>
-                      <td>{o?.payment?.success ? 'Success' : 'Failed'}</td>
+                      <td>{o?.payment?.success ? "Success" : "Failed"}</td>
                       <td>{o?.products?.length}</td>
                     </tr>
                   </tbody>
@@ -60,10 +60,12 @@ const Orders = () => {
                   <div className="card flex-row p-3 mb-3" key={p._id}>
                     <div className="col-md-4">
                       <img
-                        src={`${import.meta.env.VITE_API_URL}/api/v1/product/product-photo/${p._id}`}
+                        src={`${
+                          import.meta.env.VITE_API_URL
+                        }/api/v1/product/product-photo/${p._id}`}
                         className="img-fluid"
                         alt={p.name}
-                        style={{ height: '150px', objectFit: 'cover' }}
+                        style={{ height: "150px", objectFit: "cover" }}
                       />
                     </div>
                     <div className="col-md-8">

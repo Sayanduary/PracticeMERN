@@ -3,7 +3,7 @@ import { hashPassword, comparePassword } from "../Helpers/authHelper.js";
 import JWT from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { body, validationResult } from 'express-validator'; // For validation
-import orderModel from "../models/orderModel.js";
+import Order from "../models/order.model.js";
 
 dotenv.config({ path: './.env' });
 
